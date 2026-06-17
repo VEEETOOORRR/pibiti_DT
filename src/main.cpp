@@ -24,7 +24,7 @@ Adafruit_ADS1115 ads;
 // VARIÁVEIS GLOBAIS
 // ============================================================================
 
-static float tensao, temp_1, temp_2, temp_3;
+
 
 // ============================================================================
 // FUNÇÕES AUXILIARES
@@ -41,15 +41,17 @@ void setup(void)
     
   Serial.println("Hello!");
 
-  if (! ina219.begin()) {
+  if (!ina219.begin()) {
     Serial.println("Failed to find INA219 chip");
-    while (1) { delay(10); }
+    while (1);
   }
 
   if (!ads.begin()) {
     Serial.println("Failed to initialize ADS.");
     while (1);
   }
+
+  ads.setGain(GAIN_ONE);
 
 }
 
@@ -60,9 +62,11 @@ void setup(void)
 void loop(void) 
 {
   uint16_t adc0, adc1, adc2, adc3;
-  adc0 = ads.readADC_SingleEnded(0);
+  float tensao;
+  adc0 = ads.readADC_SingleEnded(1);
   tensao = ads.computeVolts(adc0);
 
+  Serial.print("\nadc: "); Serial.print(adc0);
   Serial.print("\nvolts: "); Serial.print(tensao);
 
   delay(200);
